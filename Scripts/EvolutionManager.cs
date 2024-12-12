@@ -98,6 +98,11 @@ public class EvolutionManager : MonoBehaviour
         }
     }
     
+    private void Awake()
+    {
+        Application.runInBackground = true;
+    }
+
     private void Start()
     {
         // Disable collision between vehicles
