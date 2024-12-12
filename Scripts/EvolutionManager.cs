@@ -257,10 +257,7 @@ public class EvolutionManager : MonoBehaviour
     {
         if (stop)
         {
-            Debug.Log($"20% of the vehicles have passed the finish line.\nFirst lap at generation {firstFinishGeneration}\nFinal generation {generationNum}");
-            Debug.Log($"Best Fitnesses {String.Join(", ", bestFitnessInGeneration)}");
-            Debug.Log($"Average Fitness {String.Join(", ", averageFitnessInGeneration)}");
-            Debug.Log($"Passed in gen {String.Join(", ", finishedVehiclesInGeneration)}");
+            Debug.Log($"First lap: {firstFinishGeneration}\n20%: {generationNum}\nBest: {String.Join(", ", bestFitnessInGeneration)}\nAvg: {String.Join(", ", averageFitnessInGeneration)}\nPass: {String.Join(", ", finishedVehiclesInGeneration)}");
             EditorApplication.isPlaying = false;
         }
         // reproduction
