@@ -261,8 +261,8 @@ public class EvolutionManager : MonoBehaviour
             EditorApplication.isPlaying = false;
         }
         // reproduction
-        var intermediateGeneration = RemainderStochasticSampling(Genotypes);
-        //var intermediateGeneration = Tournament(Genotypes);
+        // var intermediateGeneration = RemainderStochasticSampling(Genotypes);
+        var intermediateGeneration = Tournament(Genotypes);
         var newGeneration = Recombination(intermediateGeneration);
         
         Genotypes = Mutate(newGeneration);
@@ -290,6 +290,27 @@ public class EvolutionManager : MonoBehaviour
                 generation.Add(g);
         }
 
+        return generation;
+    }
+
+    private List<Genotype> Tournament(List<Genotype> genotypes)
+    {
+        var generation = new List<Genotype>();
+
+        for (int i = 0; i < populationSize; i++)
+        {
+            // 隨機選出 tournamentSize 個基因型
+            var tournament = new List<Genotype>();
+            for (int j = 0; j < tournamentSize; j++)
+            {
+                var randomIndex = _rand.Next(genotypes.Count);
+                tournament.Add(genotypes[randomIndex]);
+            }
+            // 選出適應度最高的基因型作為親代
+            var bestGenotype = tournament.OrderByDescending(g => g.Fitness).First();
+            // 加入到新一代中
+            generation.Add(bestGenotype);
+        }
         return generation;
     }
 
