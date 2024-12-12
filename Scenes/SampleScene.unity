@@ -6261,13 +6261,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1823cb6ac3d5545398323fc98c0f4928, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  populationSize: 50
+  populationSize: 15
   prefab: {fileID: 1366942923676155797, guid: 225ad2a32632af34b937efc53ffcf319, type: 3}
   crossoverChance: 0.3
-  mutationRate: 0.3
+  mutationRate: 0.15
   mutationAmount: 1
   tournamentSize: 5
-  layerSizes: 050000000400000002000000
+  layerSizes: 050000000400000001000000
   activationFuncList:
   - tanh
   - tanh

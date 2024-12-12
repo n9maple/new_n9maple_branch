@@ -157,16 +157,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxVelocity: 20
-  accelerationFactor: 8
   turnFactor: 100
-  frictionFactor: 40
   rayBias: {x: 0, y: 0.1, z: 0}
   rayMask:
     serializedVersion: 2
-    m_Bits: 119
-  index_in_list: 0
-  manager: {fileID: 0}
-  fitness: 0
+    m_Bits: 115
+  guidingAngle: 0
+  inputs: []
 --- !u!1 &7359345275192877211
 GameObject:
   m_ObjectHideFlags: 0

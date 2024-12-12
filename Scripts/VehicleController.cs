@@ -11,7 +11,7 @@ public class VehicleController : MonoBehaviour
 
     public float maxVelocity = 40f;
     public float turnFactor = 100;
-    public Vector3 rayBias = new (0, 0.5f, 0);
+    public Vector3 rayBias = new (0, 1f, 0);
     public LayerMask rayMask = ~0;
     public float guidingAngle = 0;
     public NN Fnn;

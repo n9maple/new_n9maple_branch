@@ -57,12 +57,13 @@ public class EvolutionManager : MonoBehaviour
     
     public int populationSize = 15;
     public GameObject prefab;
-    public float crossoverChance = 0.5f;
-    public float mutationRate = 0.05f;
+    public float crossoverChance = 0.3f;
+    public float mutationRate = 0.15f;
     public float mutationAmount = 1f;
     public int tournamentSize = 5;
+    private bool stop = false;
 
-    public List<int> layerSizes = new() { 5, 4, 2 };
+    public List<int> layerSizes = new() { 5, 4, 1 };
     // activation functions used at each non-input layer (relu, sigmoid, tanh)
     public List<string> activationFuncList = new() { "tanh", "tanh" };
     
@@ -153,6 +154,7 @@ public class EvolutionManager : MonoBehaviour
                 DisableVehicle(vehicle);
             };
 
+            vehicle.Reset();
             _vehicles.Add(vehicle.ID, vehicle);
         }
     }
@@ -210,9 +212,19 @@ public class EvolutionManager : MonoBehaviour
 
         if (allDisabled)
         {
-            Genotypes.Sort((a, b) => b.Fitness.CompareTo(a.Fitness));
-            bestFitnessInGeneration.Add(Genotypes[0].Fitness);
-            Debug.Log($"Best Fitness is ${Genotypes[0].Fitness}");
+            float sum_fitness = 0;
+            foreach (var g in Genotypes)
+                sum_fitness += g.Fitness;
+
+            averageFitnessInGeneration.Add(sum_fitness / populationSize);
+
+            float max_fit = 0;
+            foreach (var g in Genotypes)
+                if (g.Fitness > max_fit)
+                    max_fit = g.Fitness;
+            
+            bestFitnessInGeneration.Add(max_fit);
+            Debug.Log($"Best Fitness is ${max_fit}");
 
             int numFinished = _vehicles.Values.Count(v => v.finished);
             finishedVehiclesInGeneration.Add(numFinished);
@@ -237,27 +249,20 @@ public class EvolutionManager : MonoBehaviour
         if (Finished)
         {
 
-            float sum_fitness = 0;
-            foreach (var g in Genotypes)
-                sum_fitness += g.Fitness;
+            stop = true;
+        }
+    }
 
-            averageFitnessInGeneration.Add(sum_fitness / populationSize);
-
+    private void RespawnVehicles()
+    {
+        if (stop)
+        {
             Debug.Log($"20% of the vehicles have passed the finish line.\nFirst lap at generation {firstFinishGeneration}\nFinal generation {generationNum}");
             Debug.Log($"Best Fitnesses {String.Join(", ", bestFitnessInGeneration)}");
             Debug.Log($"Average Fitness {String.Join(", ", averageFitnessInGeneration)}");
             Debug.Log($"Passed in gen {String.Join(", ", finishedVehiclesInGeneration)}");
             EditorApplication.isPlaying = false;
         }
-    }
-
-    private void RespawnVehicles()
-    {
-        float sum_fitness = 0;
-        foreach (var g in Genotypes)
-            sum_fitness += g.Fitness;
-
-        averageFitnessInGeneration.Add(sum_fitness / populationSize);
         // reproduction
         var intermediateGeneration = RemainderStochasticSampling(Genotypes);
         //var intermediateGeneration = Tournament(Genotypes);
