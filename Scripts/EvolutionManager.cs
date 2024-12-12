@@ -55,7 +55,7 @@ internal class Vehicle
 public class EvolutionManager : MonoBehaviour
 {
     
-    public int populationSize = 50;
+    public int populationSize = 15;
     public GameObject prefab;
     public float crossoverChance = 0.5f;
     public float mutationRate = 0.05f;
@@ -76,6 +76,7 @@ public class EvolutionManager : MonoBehaviour
 
     private List<float> bestFitnessInGeneration = new();
     private List<float> averageFitnessInGeneration = new();
+    private List<int> finishedVehiclesInGeneration = new();
 
     private List<Genotype> Genotypes
     {
@@ -209,7 +210,12 @@ public class EvolutionManager : MonoBehaviour
 
         if (allDisabled)
         {
+            Genotypes.Sort((a, b) => b.Fitness.CompareTo(a.Fitness));
+            bestFitnessInGeneration.Add(Genotypes[0].Fitness);
+            Debug.Log($"Best Fitness is ${Genotypes[0].Fitness}");
+
             int numFinished = _vehicles.Values.Count(v => v.finished);
+            finishedVehiclesInGeneration.Add(numFinished);
             Debug.Log($"Generation {generationNum}. Finsihed vehicles: {numFinished}");
             RespawnVehicles();
         }
@@ -230,9 +236,17 @@ public class EvolutionManager : MonoBehaviour
 
         if (Finished)
         {
+
+            float sum_fitness = 0;
+            foreach (var g in Genotypes)
+                sum_fitness += g.Fitness;
+
+            averageFitnessInGeneration.Add(sum_fitness / populationSize);
+
             Debug.Log($"20% of the vehicles have passed the finish line.\nFirst lap at generation {firstFinishGeneration}\nFinal generation {generationNum}");
             Debug.Log($"Best Fitnesses {String.Join(", ", bestFitnessInGeneration)}");
             Debug.Log($"Average Fitness {String.Join(", ", averageFitnessInGeneration)}");
+            Debug.Log($"Passed in gen {String.Join(", ", finishedVehiclesInGeneration)}");
             EditorApplication.isPlaying = false;
         }
     }
@@ -284,7 +298,6 @@ public class EvolutionManager : MonoBehaviour
 
         //Debug.Log("Best Fitness in population: " + intermediateGeneration[0].Fitness);
         // keep best 2
-        bestFitnessInGeneration.Add(intermediateGeneration[0].Fitness);
 
         // only enable this in remainder stochastic
         newGeneration.Add(intermediateGeneration[0]);
